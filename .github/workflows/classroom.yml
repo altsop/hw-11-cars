@@ -1,0 +1,85 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: test_calculate_average_fuel_consumption
+      id: test_calculate_average_fuel_consumption
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        command: pytest --cache-clear cars/tests/test_calculate_average_fuel_consumption.py
+        max-score: 5
+
+    - name: test_find_cars_by_feature
+      id: test_find_cars_by_feature
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        command: pytest --cache-clear cars/tests/test_find_cars_by_feature.py
+        max-score: 5
+
+    - name: test_find_cars_by_make_and_model
+      id: test_find_cars_by_make_and_model
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        command: pytest --cache-clear cars/tests/test_find_cars_by_make_and_model.py
+        max-score: 5
+
+    - name: test_fuel_needed
+      id: test_fuel_needed
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        command: pytest --cache-clear cars/tests/test_fuel_needed.py
+        max-score: 5
+
+    - name: test_most_popular_feature
+      id: test_most_popular_feature
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        command: pytest --cache-clear cars/tests/test_most_popular_feature.py
+        max-score: 5
+
+    - name: test_read_cars_from_file
+      id: test_read_cars_from_file
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        command: pytest --cache-clear cars/tests/test_read_cars_from_file.py
+        max-score: 5
+
+    - name: test_sort_cars_by_make
+      id: test_sort_cars_by_make
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        command: pytest --cache-clear cars/tests/test_sort_cars_by_make.py
+        max-score: 5
+
+    - name: test_write_cars_to_file
+      id: test_write_cars_to_file
+      uses: classroom-resources/autograding-python-grader@v1
+      with:
+        command: pytest --cache-clear cars/tests/test_write_cars_to_file.py
+        max-score: 5
+
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST_CALCULATE_AVERAGE_FUEL_CONSUMPTION: "${{steps.test_calculate_average_fuel_consumption.outputs.result}}"
+        TEST_FIND_CARS_BY_FEATURE: "${{steps.test_find_cars_by_feature.outputs.result}}"
+        TEST_FIND_CARS_BY_MAKE_AND_MODEL: "${{steps.test_find_cars_by_make_and_model.outputs.result}}"
+        TEST_FUEL_NEEDED: "${{steps.test_fuel_needed.outputs.result}}"
+        TEST_MOST_POPULAR_FEATURE: "${{steps.test_most_popular_feature.outputs.result}}"
+        TEST_READ_CARS_FROM_FILE: "${{steps.test_read_cars_from_file.outputs.result}}"
+        TEST_SORT_CARS_BY_MAKE: "${{steps.test_sort_cars_by_make.outputs.result}}"
+        TEST_WRITE_CARS_TO_FILE: "${{steps.test_write_cars_to_file.outputs.result}}"
+      with:
+        runners: "test_calculate_average_fuel_consumption,test_find_cars_by_feature,test_find_cars_by_make_and_model,test_fuel_needed,test_most_popular_feature,test_read_cars_from_file,test_sort_cars_by_make,test_write_cars_to_file"
